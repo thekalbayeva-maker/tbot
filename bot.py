@@ -1,24 +1,20 @@
-import os
 import asyncio
 import logging
 from aiogram import Bot, Dispatcher, F
 from aiogram.filters import CommandStart
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
 
-# Бот токенін жүктеу (Сервердегі Environment Variables ішінен алады)
-BOT_TOKEN = os.getenv("BOT_TOKEN")
+# Сіз ұсынған Бот Токен
+BOT_TOKEN = "8743390723:AAFinYf69gdeOp0PT1KSk46FivSRYi_IKjw"
 
-if not BOT_TOKEN:
-    exit("Қате: BOT_TOKEN айнымалысы табылмады! Оны сервер баптауларына қосыңыз.")
-
-# Логтарды баптау (Бұлтта қателерді көру үшін қажет)
+# Логтарды баптау (Серверде боттың жұмысын бақылау үшін)
 logging.basicConfig(level=logging.INFO)
 
 # Бот пен Диспатчерді инициализациялау
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
-# Кнопкаларды (Reply-клавиатура) жасау
+# Батырмалар мәзірін жасау функциясы
 def get_main_keyboard() -> ReplyKeyboardMarkup:
     kb = [
         [KeyboardButton(text="ℹ️ Біз туралы")],
@@ -26,11 +22,11 @@ def get_main_keyboard() -> ReplyKeyboardMarkup:
     ]
     return ReplyKeyboardMarkup(
         keyboard=kb,
-        resize_keyboard=True,  # Кнопкаларды экранға шақтау
+        resize_keyboard=True,  # Батырмаларды экран өлшеміне ыңғайлау
         input_field_placeholder="Төмендегі мәзірден таңдаңыз..."
     )
 
-# /start командасына жауап
+# /start командасына жауап (Сәлемдесу)
 @dp.message(CommandStart())
 async def cmd_start(message: Message):
     welcome_text = (
@@ -40,7 +36,7 @@ async def cmd_start(message: Message):
     )
     await message.answer(welcome_text, parse_mode="Markdown", reply_markup=get_main_keyboard())
 
-# "Біз туралы" батырмасы
+# "ℹ️ Біз туралы" батырмасы басылғанда
 @dp.message(F.text == "ℹ️ Біз туралы")
 async def about_us(message: Message):
     text = (
@@ -51,7 +47,7 @@ async def about_us(message: Message):
     )
     await message.answer(text, parse_mode="Markdown")
 
-# "Бағыттар" батырмасы
+# "🎯 Бағыттар" батырмасы басылғанда
 @dp.message(F.text == "🎯 Бағыттар")
 async def directions(message: Message):
     text = (
@@ -59,25 +55,25 @@ async def directions(message: Message):
         "1️⃣ **Волонтерлық қозғалыс** — қайырымдылық іс-шаралар мен әлеуметтік жобалар.\n"
         "2️⃣ **Кәсіби бағдар беру** — жастарға мамандық таңдауда және жұмысқа орналасуда көмек көрсету.\n"
         "3️⃣ **Психологиялық-құқықтық көмек** — жастарға арналған тегін кеңестер мен қолдау.\n"
-        "4️⃣ **Мәдени-бұқаралық іс-шаралар** — спорттық, интеллектуалдық және мәдени жобалар, алдағы іс-шаралар анонсы."
+        "4️⃣ **Мәдени-бұқаралық іс-шаралар** — спорттық, интеллектуалдық және мәдени жобалар."
     )
     await message.answer(text, parse_mode="Markdown")
 
-# "Контактілер" батырмасы
+# "📞 Контактілер" батырмасы басылғанда
 @dp.message(F.text == "📞 Контактілер")
 async def contacts(message: Message):
     text = (
         "📞 **Байланыс мәліметтері:**\n\n"
-        "📍 **Мекенжай:** [Сайтта көрсетілген мекенжай]\n"
-        "📱 **Телефон нөмірі:** +7 (XXX) XXX-XX-XX\n"
+        "📍 **Мекенжай:** Жастар Орталығы ғимараты, 1-қабат\n"
+        "📱 **Телефон нөмірі:** +7 (777) 123-45-67\n"
         "📧 **Пошта:** info@jastar.kz\n\n"
         "🌐 Біздің әлеуметтік желілерімізге жазылып, жаңалықтардан қалыс қалмаңыз!"
     )
     await message.answer(text, parse_mode="Markdown")
 
-# Ботты іске қосу функциясы
+# Ботты іске қосу
 async def main():
-    # Бот өшіп тұрғанда келген ескі хабарламаларды өшіру (Дұрыс жұмыс істеу үшін)
+    # Бот өшіп тұрғанда келген ескі хабарламаларды өткізіп жіберу
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
